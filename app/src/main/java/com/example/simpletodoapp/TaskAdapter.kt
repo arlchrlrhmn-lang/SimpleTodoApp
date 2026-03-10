@@ -24,5 +24,14 @@ class TaskAdapter(private val taskList: MutableList<Task>) : RecyclerView.Adapte
         holder.binding.cbTask.isChecked = task.isDone
         holder.binding.tvTaskTitle.text = task.title
 
+        holder.binding.cbTask.setOnCheckedChangeListener { _, isChecked ->
+            task.isDone = isChecked
+
+            if (task.isDone) {
+                holder.binding.tvTaskTitle.paint.isStrikeThruText = true
+            } else {
+                holder.binding.tvTaskTitle.paint.isStrikeThruText = false
+            }
+        }
     }
 }

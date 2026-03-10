@@ -2,5 +2,5 @@ package com.example.simpletodoapp
 
 data class Task(
     val title: String,
-    val isDone: Boolean = false
+    var isDone: Boolean = false
 )
