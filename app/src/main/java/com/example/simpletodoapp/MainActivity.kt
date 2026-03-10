@@ -1,12 +1,13 @@
 package com.example.simpletodoapp
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.simpletodoapp.databinding.ActivityMainBinding
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 
 class MainActivity : AppCompatActivity() {
@@ -20,11 +21,13 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        loadTask()
         adapter = TaskAdapter(tasklist)
         binding.rvTask.adapter = adapter
         binding.rvTask.setHasFixedSize(true)
 
         binding.rvTask.layoutManager = LinearLayoutManager(this)
+
 
         //Swipe delete di luar tombol
         val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT.or(ItemTouchHelper.RIGHT)) {
@@ -41,6 +44,7 @@ class MainActivity : AppCompatActivity() {
                 val position = viewHolder.bindingAdapterPosition
                 tasklist.removeAt(position)
                 adapter.notifyItemRemoved(position)
+                saveTask()
             }
         })
 
@@ -55,8 +59,42 @@ class MainActivity : AppCompatActivity() {
                 val task = Task(tasktitle)
                 tasklist.add(task)
                 adapter.notifyItemInserted(tasklist.size - 1)
+                saveTask()
                 binding.etTask.text?.clear()
             }
+        }
+    }
+
+    private fun saveTask() {
+
+        val sharedPreferences = getSharedPreferences("todo_pref", MODE_PRIVATE)
+
+        val editor = sharedPreferences.edit()
+
+        val gson = Gson()
+
+        val json = Gson().toJson(tasklist)
+
+        editor.putString("task", json)
+
+        editor.apply()
+    }
+
+    private fun loadTask() {
+
+        val sharedPreferences = getSharedPreferences("todo_pref", MODE_PRIVATE)
+
+        val gson = Gson()
+
+        val json = sharedPreferences.getString("task", null)
+
+        val type = object : TypeToken<MutableList<Task>>() {}.type
+
+        if (json != null) {
+
+            val savedTask = gson.fromJson<MutableList<Task>>(json, type)
+
+            tasklist.addAll(savedTask)
         }
     }
 }
