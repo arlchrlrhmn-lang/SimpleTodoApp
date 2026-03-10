@@ -2,6 +2,7 @@ package com.example.simpletodoapp
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.simpletodoapp.databinding.ItemTaskBinding
 
@@ -33,5 +34,8 @@ class TaskAdapter(private val taskList: MutableList<Task>) : RecyclerView.Adapte
                 holder.binding.tvTaskTitle.paint.isStrikeThruText = false
             }
         }
-    }
-}
+
+
+            }
+        }
+
