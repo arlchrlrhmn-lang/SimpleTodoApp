@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
 
         val gson = Gson()
 
-        val json = Gson().toJson(tasklist)
+        val json = gson.toJson(tasklist)
 
         editor.putString("task", json)
 
@@ -91,10 +91,9 @@ class MainActivity : AppCompatActivity() {
         val type = object : TypeToken<MutableList<Task>>() {}.type
 
         if (json != null) {
-
-            val savedTask = gson.fromJson<MutableList<Task>>(json, type)
-
-            tasklist.addAll(savedTask)
+            tasklist = gson.fromJson(json, type)
+        } else {
+            tasklist = mutableListOf()
         }
     }
 }
